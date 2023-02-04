@@ -7,13 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import reactor.core.scheduler.Schedulers;
+
+import java.util.LinkedList;
+import java.util.List;
 
 
 @RestController
 @RequestMapping("/itStore")
 public class ITStoreController {
-
     @Autowired
     ProductsRepository productRepository;
     @Autowired
@@ -25,6 +26,11 @@ public class ITStoreController {
     @Autowired
     ItemRepository itemRepository;
 
+    @Autowired
+    List<String> source;
+
+
+
     @GetMapping("/products")
     public Flux<Products> getAllProducts() {
         return productRepository.findAll();
@@ -33,6 +39,11 @@ public class ITStoreController {
     @GetMapping("/{id}")
     public Mono<Products> getProductById(@PathVariable Integer id) {
         return productRepository.findById(id);
+    }
+
+    @GetMapping("/first_N_products")
+    public Flux<Products> getFirstNProducts(@RequestParam int N) {
+        return productRepository.findProductsByIdProdIsBefore(N);
     }
 
     @GetMapping("/product_max_profit")
@@ -103,4 +114,9 @@ public class ITStoreController {
         return  itemRepository.findItemsBetweenDates();
     }
 
+
+    @GetMapping("/test_controller_only")
+    public Flux<String> testControllerOnly() {
+        return Flux.fromIterable(source);
+    }
 }

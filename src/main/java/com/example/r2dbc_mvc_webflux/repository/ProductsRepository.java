@@ -55,4 +55,6 @@ public interface ProductsRepository extends R2dbcRepository<Products,Integer> {
             "group by category\n" +
             "order by category;")
     Flux<CategoryProfit> findProfitForEachCategory();
+
+    Flux<Products> findProductsByIdProdIsBefore(int N);
 }
